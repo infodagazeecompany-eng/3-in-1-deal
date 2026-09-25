@@ -529,6 +529,10 @@ if(form){
       total: 2200
     };
 
+    // Mark that a real order was submitted in this browser tab.
+    // Purchase is allowed only after this flag is set and the Thank You URL is reached.
+    try { sessionStorage.setItem("realOrderPlaced", "1"); } catch (e) {}
+
     // Save the order to Google Sheets in the background.
     fetch(GOOGLE_SHEET_ENDPOINT, {
       method: "POST",
@@ -555,6 +559,8 @@ if(form){
       history.replaceState({thankYou:true},"","?thank-you=1");
       window.scrollTo({top:0,behavior:"auto"});
       try{ if(typeof fbq === "function") fbq("track","PageView"); }catch(err){}
+      // Fire TikTok Purchase only after the real order reaches Thank You.
+      if (typeof fireTikTokPurchase === "function") fireTikTokPurchase();
     }, 2000);
   });
 }
@@ -614,16 +620,24 @@ showThankYouFromUrl();
 
 <script>
 (function(){
-  function fireTikTokPurchase(){
-    var thankYou=document.getElementById('thankYouPage');
-    if(!thankYou || thankYou.style.display === 'none' || window.__tiktokPurchaseFired) return;
-    window.__tiktokPurchaseFired=true;
-    if(window.ttq && typeof window.ttq.track === 'function'){
-      window.ttq.track('Purchase',{value:2000,currency:'PKR'});
+  window.fireTikTokPurchase = function(){
+    if (window.__tiktokPurchaseFired) return;
+
+    var isThankYou = new URLSearchParams(window.location.search).get("thank-you") === "1";
+    var orderWasActuallyPlaced = false;
+    try { orderWasActuallyPlaced = sessionStorage.getItem("realOrderPlaced") === "1"; } catch (e) {}
+
+    // IMPORTANT: Never fire Purchase on the normal homepage.
+    if (!isThankYou || !orderWasActuallyPlaced) return;
+
+    window.__tiktokPurchaseFired = true;
+    if (window.ttq && typeof window.ttq.track === "function") {
+      window.ttq.track("Purchase", {value:2000, currency:"PKR"});
     }
-  }
-  window.addEventListener('load',function(){ setTimeout(fireTikTokPurchase,250); });
-  window.addEventListener('pageshow',function(){ setTimeout(fireTikTokPurchase,250); });
+
+    // Prevent duplicate Purchase on refresh/back navigation.
+    try { sessionStorage.removeItem("realOrderPlaced"); } catch (e) {}
+  };
 })();
 </script>
 </body>
