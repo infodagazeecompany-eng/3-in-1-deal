@@ -559,9 +559,7 @@ if(form){
       history.replaceState({thankYou:true},"","?thank-you=1");
       window.scrollTo({top:0,behavior:"auto"});
       try{ if(typeof fbq === "function") fbq("track","PageView"); }catch(err){}
-      // Fire TikTok Purchase only after the real order reaches Thank You.
-      if (typeof fireTikTokPurchase === "function") fireTikTokPurchase();
-    }, 2000);
+}, 2000);
   });
 }
 function showThankYouFromUrl(){
@@ -618,39 +616,6 @@ showThankYouFromUrl();
 
 
 
-<script>
-(function(){
-  // TikTok Purchase is intentionally fired ONLY once, after a real order.
-  window.fireTikTokPurchase = function(){
-    if (window.__tiktokPurchaseFired === true) return;
 
-    var isThankYou = new URLSearchParams(window.location.search).get("thank-you") === "1";
-    var orderWasActuallyPlaced = false;
-
-    try {
-      orderWasActuallyPlaced = sessionStorage.getItem("realOrderPlaced") === "1";
-    } catch (e) {}
-
-    if (!isThankYou || !orderWasActuallyPlaced) return;
-
-    // Lock BEFORE sending the event so double execution cannot send twice.
-    window.__tiktokPurchaseFired = true;
-    try {
-      if (sessionStorage.getItem("tiktokPurchaseSent") === "1") return;
-      sessionStorage.setItem("tiktokPurchaseSent", "1");
-    } catch (e) {}
-
-    if (window.ttq && typeof window.ttq.track === "function") {
-      window.ttq.track("Purchase", {
-        value: 2000,
-        currency: "PKR"
-      });
-    }
-
-    // Consume the real-order flag after the single Purchase.
-    try { sessionStorage.removeItem("realOrderPlaced"); } catch (e) {}
-  };
-})();
-</script>
 </body>
 </html>
