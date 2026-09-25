@@ -71,6 +71,132 @@ label{font-size:12px;font-weight:700}input,select,textarea{width:100%;padding:12
 .thank-you-card .call-note{background:#f0f7ed;border:1px solid #d7e8d1;border-radius:12px;padding:13px;color:#285b24;font-weight:700;margin:15px 0;line-height:1.5}
 .thank-you-card button{background:#285b24;color:#fff;border:0;border-radius:9px;padding:13px 25px;font-weight:800;cursor:pointer;width:100%;max-width:330px}
 @media(max-width:600px){.activity-toast{left:10px!important;right:auto!important;top:10px!important;width:260px!important;max-width:calc(100vw - 20px)!important}.steps{gap:4px}.step{font-size:10px}.step-icon{width:38px;height:38px;font-size:18px}.thank-you-card{padding:27px 14px}.thank-you-card h1{font-size:32px}.order-details{padding:14px 12px}}
+
+/* FINAL HEADER + NOTIFICATION OVERRIDES */
+.top{
+  background:linear-gradient(90deg,#245b20,#2f7028);
+  color:#fff;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  padding:9px 18px;
+  align-items:center;
+  text-align:center;
+}
+.top span{
+  font-weight:800;
+  font-size:13px;
+  line-height:1.2;
+  padding:2px 8px;
+}
+.top small{
+  display:block;
+  font-size:10px;
+  font-weight:500;
+  opacity:.9;
+  margin-top:3px;
+}
+header{
+  min-height:78px;
+  padding:12px 24px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  border-bottom:1px solid #e8ece5;
+  background:#fff;
+  box-shadow:0 3px 12px rgba(0,0,0,.05);
+}
+.logo{flex:0 0 auto}
+.main-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex:1;
+}
+.main-nav a{
+  color:#243c20;
+  text-decoration:none;
+  font-weight:800;
+  font-size:14px;
+  padding:10px 13px;
+  border-radius:9px;
+  transition:.2s;
+}
+.main-nav a:hover{background:#edf6e9;color:#1f5d22}
+.header-btn{
+  flex:0 0 auto;
+  background:#285f25!important;
+  color:#fff!important;
+  border:0;
+  border-radius:10px;
+  padding:13px 20px!important;
+  font-weight:900;
+  font-size:15px;
+  box-shadow:0 5px 14px rgba(40,95,37,.18);
+}
+
+/* Notification: right corner on both desktop and mobile */
+.activity-toast{
+  left:auto!important;
+  right:14px!important;
+  top:14px!important;
+  bottom:auto!important;
+  width:min(300px,calc(100vw - 28px))!important;
+  max-width:300px!important;
+  z-index:99999;
+}
+@media(max-width:600px){
+  .top{
+    grid-template-columns:repeat(2,1fr);
+    gap:5px;
+    padding:7px 8px;
+  }
+  .top span{
+    font-size:11px;
+    padding:3px 2px;
+  }
+  .top small{font-size:9px}
+  header{
+    min-height:auto;
+    padding:11px 12px 10px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px 10px;
+  }
+  .logo{font-size:34px!important;line-height:1}
+  .logo small{font-size:9px!important;letter-spacing:2px}
+  .header-btn{
+    padding:11px 15px!important;
+    font-size:14px!important;
+  }
+  .main-nav{
+    grid-column:1 / -1;
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:4px;
+    border-top:1px solid #edf0eb;
+    padding-top:7px;
+  }
+  .main-nav a{
+    font-size:11px;
+    padding:8px 3px;
+    text-align:center;
+    background:#f7faf5;
+  }
+  .activity-toast{
+    right:10px!important;
+    left:auto!important;
+    top:10px!important;
+    width:250px!important;
+    max-width:calc(100vw - 20px)!important;
+    padding:9px 10px!important;
+  }
+  .activity-icon{width:33px!important;height:33px!important}
+  .activity-text{font-size:11.5px!important}
+}
+
 </style>
 </head>
 <body>
@@ -79,7 +205,7 @@ label{font-size:12px;font-weight:700}input,select,textarea{width:100%;padding:12
 </div>
 <header>
 <div class="logo">GlowCare<small>BEAUTY &amp; SKINCARE</small></div>
-<nav><a href="#home">Home</a><a href="#products">Products</a><a href="#benefits">Benefits</a><a href="#reviews">Reviews</a></nav>
+<nav class="main-nav"><a href="#home">Home</a><a href="#benefits">Benefits</a><a href="#reviews">Reviews</a><a href="#orderForm">Order Form</a></nav>
 <button class="header-btn" onclick="goOrder()">Order Now</button>
 </header>
 <main class="container" id="home">
@@ -176,6 +302,7 @@ label{font-size:12px;font-weight:700}input,select,textarea{width:100%;padding:12
 <div class="activity-toast" id="activityToast" aria-live="polite"><div class="activity-icon" id="activityIcon">✓</div><div class="activity-text" id="activityText"></div></div>
 <footer>© 2026 GlowCare • Cash on Delivery • Privacy Policy • Refund Policy</footer>
 <script>
+const GOOGLE_SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbw95Cv9ciKyeBP38uOJWeSC-5OiEVk8CGuwFbOFXo9A9v0nwZaboMcXRGW6ifNeIfUyFA/exec";
 function goOrder(){document.getElementById("orderForm").scrollIntoView({behavior:"smooth"});}
 const form=document.getElementById("orderForm");
 const toast=document.getElementById("activityToast");
@@ -205,6 +332,31 @@ setTimeout(nextNotification,1500);
 if(form){
   form.addEventListener("submit",function(e){
     e.preventDefault();
+
+    const fd = new FormData(form);
+    const order = {
+      name: fd.get("name") || "",
+      phone: fd.get("phone") || "",
+      address: fd.get("address") || "",
+      landmark: fd.get("landmark") || "",
+      city: fd.get("city") || "",
+      product: "3 In 1 Beauty Deal",
+      price: 2000,
+      delivery: 200,
+      total: 2200
+    };
+
+    // Save the order to Google Sheets in the background.
+    fetch(GOOGLE_SHEET_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(order),
+      keepalive: true
+    }).catch(function(err){
+      console.warn("Order sheet request:", err);
+    });
+
     document.querySelector("main").style.display="none";
     document.querySelector("header").style.display="none";
     document.querySelector(".top").style.display="none";
@@ -213,10 +365,10 @@ if(form){
     document.getElementById("processingPage").style.display="flex";
     document.getElementById("thankYouPage").style.display="none";
     window.scrollTo({top:0,behavior:"smooth"});
+
     setTimeout(function(){
       document.getElementById("processingPage").style.display="none";
       document.getElementById("thankYouPage").style.display="flex";
-      // Give the thank-you state its own trackable URL without requiring a separate HTML route.
       history.replaceState({thankYou:true},"","?thank-you=1");
       window.scrollTo({top:0,behavior:"smooth"});
       try{ if(typeof fbq === "function") fbq("track","PageView"); }catch(err){}
