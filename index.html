@@ -352,6 +352,15 @@ header{
   }
 }
 
+
+/* FINAL PROCESSING / THANK-YOU FLOW */
+.processing-page,
+.thank-you-page{
+  display:none;
+  width:100%;
+  box-sizing:border-box;
+}
+
 </style>
 </head>
 <body>
@@ -515,27 +524,26 @@ if(form){
 
     document.querySelector("main").style.display="none";
     document.querySelector("header").style.display="none";
-    document.querySelector(".top").style.display="none";
     document.querySelector("footer").style.display="none";
     document.getElementById("activityToast").style.display="none";
     document.getElementById("processingPage").style.display="flex";
     document.getElementById("thankYouPage").style.display="none";
     window.scrollTo({top:0,behavior:"smooth"});
 
+    // Show Processing for exactly 2 seconds, then open the Thank You page.
     setTimeout(function(){
       document.getElementById("processingPage").style.display="none";
       document.getElementById("thankYouPage").style.display="flex";
       history.replaceState({thankYou:true},"","?thank-you=1");
-      window.scrollTo({top:0,behavior:"smooth"});
+      window.scrollTo({top:0,behavior:"auto"});
       try{ if(typeof fbq === "function") fbq("track","PageView"); }catch(err){}
-    },2000);
+    }, 2000);
   });
 }
 function showThankYouFromUrl(){
   if(new URLSearchParams(window.location.search).get("thank-you")==="1"){
     document.querySelector("main").style.display="none";
     document.querySelector("header").style.display="none";
-    document.querySelector(".top").style.display="none";
     document.querySelector("footer").style.display="none";
     document.getElementById("activityToast").style.display="none";
     document.getElementById("processingPage").style.display="none";
